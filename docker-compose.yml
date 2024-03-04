@@ -5,5 +5,4 @@ services:
     container_name: trb-officer-backend
     build: ./
     ports:
-      - "5083:5083"
-      - "7293:7293"
+      - "5083:8080"
