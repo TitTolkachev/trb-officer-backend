@@ -18,7 +18,7 @@ public class UserServiceImpl : UserService.UserServiceBase
         ServerCallContext context)
     {
         var httpClient = _httpClientFactory.CreateClient("Main");
-        var content = new Page(PageNumber: 1, PageSize: 10);
+        var content = new Page(PageNumber: 0, PageSize: 10);
 
 
         var response = await httpClient.PostAsJsonAsync("users/client-page", content);
