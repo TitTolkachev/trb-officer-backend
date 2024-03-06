@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "trb_officer_backend";
+
+package loan;
+
+service LoanService {
+  rpc GetLoanList (GetLoanListRequest) returns (GetLoanListReply);
+  rpc CreateLoan (CreateLoanRequest) returns (CreateLoanReply);
+}
+
+// Get Loan List
+message GetLoanListRequest{}
+message GetLoanListReply{}
+
+// Create Loan
+message CreateLoanRequest{}
+message CreateLoanReply{}

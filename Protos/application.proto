@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "trb_officer_backend";
+
+package application;
+
+service ApplicationService {
+  rpc GetApplicationList (GetApplicationListRequest) returns (GetApplicationListReply);
+  rpc GetApplication (GetApplicationRequest) returns (GetApplicationReply);
+}
+
+// Get Application List
+message GetApplicationListRequest{}
+message GetApplicationListReply{}
+
+// Get Application Info
+message GetApplicationRequest{}
+message GetApplicationReply{}

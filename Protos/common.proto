@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "trb_officer_backend";
+
+package common;
+
+message UserShort{
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string birthDate = 4;
+}
+
+message AccountShort{
+  string id = 1;
+  int64 balance = 2;
+}
+
+message Account{
+  string id = 1;
+  google.protobuf.Timestamp creationDate = 2;
+  google.protobuf.Timestamp closingDate = 3;
+  int64 balance = 4;
+  string ownerFullName = 5;
+  Client owner = 6;
+}
+
+message Client{
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string patronymic = 4;
+  string phoneNumber = 5;
+  string address = 6;
+  string passportNumber = 7;
+  string passportSeries = 8;
+  string email = 9;
+  bool isBlocked = 10;
+  optional Officer whoBlocked = 11;
+  Officer whoCreated = 12;
+}
+
+message Officer{
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string patronymic = 4;
+  string phoneNumber = 5;
+  string address = 6;
+  string passportNumber = 7;
+  string passportSeries = 8;
+  string email = 9;
+  bool isBlocked = 10;
+  optional Officer whoBlocked = 11;
+  Officer whoCreated = 12;
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "protos/common.proto";
+
+option csharp_namespace = "trb_officer_backend";
+
+package account;
+
+service AccountService {
+  rpc GetAccountList (GetAccountListRequest) returns (GetAccountListReply);
+  rpc GetAccount (GetAccountRequest) returns (GetAccountReply);
+}
+
+// Get Account List
+message GetAccountListRequest{
+  string userId = 1;
+}
+message GetAccountListReply{
+  repeated common.AccountShort accounts = 1;
+}
+
+// Get Account Info
+message GetAccountRequest{
+  string accountId = 1;
+}
+message GetAccountReply{
+  common.Account account = 1;
+}

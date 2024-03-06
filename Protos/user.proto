@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+import "protos/common.proto";
+
+option csharp_namespace = "trb_officer_backend";
+
+package user;
+
+service UserService {
+  rpc GetClientList (GetClientListRequest) returns (GetClientListReply);
+  rpc GetOfficerList (GetOfficerListRequest) returns (GetOfficerListReply);
+  rpc CreateClient (CreateClientRequest) returns (CreateClientReply);
+  rpc CreateOfficer (CreateOfficerRequest) returns (CreateOfficerReply);
+}
+
+// Get Client List
+message GetClientListRequest{}
+message GetClientListReply{
+  repeated common.UserShort clients = 1;
+}
+
+// Get Officer List
+message GetOfficerListRequest{}
+message GetOfficerListReply{
+  repeated common.UserShort officers = 1;
+}
+
+// Create Client
+message CreateClientRequest{
+  string firstName = 1;
+  string lastName = 2;
+  string patronymic = 3;
+  string phoneNumber = 4;
+  string address = 5;
+  string passportNumber = 6;
+  string passportSeries = 7;
+  string email = 8;
+  string password = 9;
+}
+message CreateClientReply{
+  optional string error = 1;
+}
+
+// Create Officer
+message CreateOfficerRequest{
+  string firstName = 1;
+  string lastName = 2;
+  string patronymic = 3;
+  string phoneNumber = 4;
+  string address = 5;
+  string passportNumber = 6;
+  string passportSeries = 7;
+  string email = 8;
+  string password = 9;
+}
+message CreateOfficerReply{
+  optional string error = 1;
+}

@@ -4,5 +4,7 @@ services:
   trb-officer-backend:
     container_name: trb-officer-backend
     build: ./
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "5083:8080"

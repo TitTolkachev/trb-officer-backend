@@ -2,16 +2,14 @@ using trb_officer_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddGrpc();
+builder.Services.AddHttpClient("Main", client =>
+{
+    client.BaseAddress = new Uri("http://188.235.125.159:8082/api/v1/");
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.MapGrpcService<GreeterService>();
-app.MapGrpcService<MyApiService>();
-app.MapGet("/",
-    () =>
-        "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+app.MapGrpcService<UserServiceImpl>();
 
 app.Run();

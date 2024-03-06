@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "trb_officer_backend";
+
+package rate;
+
+service RateService {
+  rpc GetRateList (GetRateListRequest) returns (GetRateListReply);
+  rpc CreateRate (CreateRateRequest) returns (CreateRateReply);
+}
+
+// Get Rate List
+message GetRateListRequest{}
+message GetRateListReply{}
+
+// Create Rate
+message CreateRateRequest{}
+message CreateRateReply{}

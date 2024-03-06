@@ -8,15 +8,31 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\account.proto" GrpcServices="Server"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\api.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\application.proto" GrpcServices="Server"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Protobuf Include="Protos\common.proto" GrpcServices="Server"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Protobuf Include="Protos\loan.proto" GrpcServices="Server"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+        <Protobuf Include="Protos\rate.proto" GrpcServices="Server"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="Protos\user.proto" GrpcServices="Server"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0"/>
     </ItemGroup>
 
 </Project>
