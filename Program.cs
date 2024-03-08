@@ -1,11 +1,16 @@
+using trb_officer_backend.Common;
 using trb_officer_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpc();
-builder.Services.AddHttpClient("Main", client =>
+builder.Services.AddHttpClient(Constants.UserHttpClient, client =>
 {
-    client.BaseAddress = new Uri("http://188.235.125.159:8082/api/v1/");
+    client.BaseAddress = new Uri(Constants.UserHost);
+});
+builder.Services.AddHttpClient(Constants.CoreHttpClient, client =>
+{
+    client.BaseAddress = new Uri(Constants.CoreHost);
 });
 
 var app = builder.Build();
