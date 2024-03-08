@@ -29,30 +29,38 @@ message GetOfficerListReply{
 message CreateClientRequest{
   string firstName = 1;
   string lastName = 2;
-  string patronymic = 3;
-  string phoneNumber = 4;
-  string address = 5;
-  string passportNumber = 6;
-  string passportSeries = 7;
-  string email = 8;
-  string password = 9;
+  optional string patronymic = 3;
+  int64 birthDate = 4;
+  string phoneNumber = 5;
+  string address = 6;
+  string passportNumber = 7;
+  optional string passportSeries = 8;
+  string whoCreatedId = 9;
+  string email = 10;
+  string password = 11;
+  string sex = 12;
 }
 message CreateClientReply{
-  optional string error = 1;
+  optional string id = 1;
+  optional string error = 2;
 }
 
 // Create Officer
 message CreateOfficerRequest{
   string firstName = 1;
   string lastName = 2;
-  string patronymic = 3;
-  string phoneNumber = 4;
-  string address = 5;
-  string passportNumber = 6;
-  string passportSeries = 7;
-  string email = 8;
-  string password = 9;
+  optional string patronymic = 3;
+  int64 birthDate = 4;
+  string phoneNumber = 5;
+  string address = 6;
+  string passportNumber = 7;
+  optional string passportSeries = 8;
+  string whoCreatedId = 9;
+  string email = 10;
+  string password = 11;
+  string sex = 12;
 }
 message CreateOfficerReply{
-  optional string error = 1;
+  optional string id = 1;
+  optional string error = 2;
 }

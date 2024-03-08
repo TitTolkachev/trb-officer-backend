@@ -31,28 +31,30 @@ message Client{
   string id = 1;
   string firstName = 2;
   string lastName = 3;
-  string patronymic = 4;
+  optional string patronymic = 4;
   string phoneNumber = 5;
   string address = 6;
   string passportNumber = 7;
-  string passportSeries = 8;
+  optional string passportSeries = 8;
   string email = 9;
-  bool isBlocked = 10;
-  optional Officer whoBlocked = 11;
-  Officer whoCreated = 12;
+  string sex = 10;
+  bool isBlocked = 11;
+  optional string whoBlocked = 12;
+  optional string whoCreated = 13;
 }
 
 message Officer{
   string id = 1;
   string firstName = 2;
   string lastName = 3;
-  string patronymic = 4;
+  optional string patronymic = 4;
   string phoneNumber = 5;
   string address = 6;
   string passportNumber = 7;
-  string passportSeries = 8;
+  optional string passportSeries = 8;
   string email = 9;
-  bool isBlocked = 10;
-  optional Officer whoBlocked = 11;
-  Officer whoCreated = 12;
+  string sex = 10;
+  bool isBlocked = 11;
+  optional string whoBlocked = 12;
+  optional string whoCreated = 13;
 }
