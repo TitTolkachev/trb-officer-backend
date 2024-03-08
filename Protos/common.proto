@@ -6,6 +6,15 @@ option csharp_namespace = "trb_officer_backend";
 
 package common;
 
+message Tariff{
+  string id = 1;
+  string additionDate = 2;
+  string name = 3;
+  string description = 4;
+  double interestRate = 5;
+  string officerId = 6;
+}
+
 message UserShort{
   string id = 1;
   string firstName = 2;

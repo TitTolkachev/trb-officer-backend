@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\rate.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\tariff.proto" GrpcServices="Server" />
     </ItemGroup>
 
     <ItemGroup>
