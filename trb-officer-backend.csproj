@@ -6,17 +6,17 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>8f1eaf5f-8339-46c2-808c-5719c82fc395</UserSecretsId>
     </PropertyGroup>
-
+    
+    <ItemGroup>
+        <Protobuf Include="Protos\common.proto" GrpcServices="Server" />
+    </ItemGroup>
+    
     <ItemGroup>
         <Protobuf Include="Protos\account.proto" GrpcServices="Server" />
     </ItemGroup>
 
     <ItemGroup>
         <Protobuf Include="Protos\application.proto" GrpcServices="Server" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <Protobuf Include="Protos\common.proto" GrpcServices="Server" />
     </ItemGroup>
     
     <ItemGroup>

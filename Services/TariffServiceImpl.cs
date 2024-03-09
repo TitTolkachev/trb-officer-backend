@@ -21,14 +21,15 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
 
         var response = await httpClient.GetAsync("tariff");
-        _logger.LogInformation("GetClientList FAILED: {Response}", response.ToString());
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("GetClientList FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
 
         var list = await response.Content.ReadFromJsonAsync<List<Tariff>>();
         if (list == null)
             throw new Exception("GetTariffList FAILED: list == null");
 
-        var reply = new GetTariffListReply
+        return new GetTariffListReply
         {
             Tariffs =
             {
@@ -43,8 +44,6 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
                 })
             }
         };
-
-        return reply;
     }
 
     public override async Task<CreateTariffReply> CreateTariff(CreateTariffRequest request,

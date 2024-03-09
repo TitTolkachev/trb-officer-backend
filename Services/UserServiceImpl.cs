@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Grpc.Core;
 using trb_officer_backend.Common;
 using trb_officer_backend.Dto;
@@ -24,14 +23,15 @@ public class UserServiceImpl : UserService.UserServiceBase
         var content = new Page(PageNumber: 0, PageSize: 1000);
 
         var response = await httpClient.PostAsJsonAsync("users/client-page", content);
-        _logger.LogInformation("GetClientList FAILED: {Response}", response.ToString());
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("GetClientList FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
+
         var page = await response.Content.ReadFromJsonAsync<PageClient>();
-
         if (page == null)
-            return new GetClientListReply { Clients = { ImmutableList<UserShort>.Empty } };
+            throw new Exception("GetClientList FAILED: page == null");
 
-        var reply = new GetClientListReply
+        return new GetClientListReply
         {
             Clients =
             {
@@ -39,8 +39,6 @@ public class UserServiceImpl : UserService.UserServiceBase
                     { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, BirthDate = c.BirthDate })
             }
         };
-
-        return reply;
     }
 
     public override async Task<GetOfficerListReply> GetOfficerList(GetOfficerListRequest request,
@@ -50,12 +48,13 @@ public class UserServiceImpl : UserService.UserServiceBase
         var content = new Page(PageNumber: 0, PageSize: 1000);
 
         var response = await httpClient.PostAsJsonAsync("users/officer-page", content);
-        _logger.LogInformation("GetOfficerList FAILED: {Response}", response.ToString());
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("GetOfficerList FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
-        var page = await response.Content.ReadFromJsonAsync<PageOfficer>();
 
+        var page = await response.Content.ReadFromJsonAsync<PageOfficer>();
         if (page == null)
-            return new GetOfficerListReply { Officers = { ImmutableList<UserShort>.Empty } };
+            throw new Exception("GetOfficerList FAILED: page == null");
 
         var reply = new GetOfficerListReply
         {
@@ -65,6 +64,90 @@ public class UserServiceImpl : UserService.UserServiceBase
                     { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, BirthDate = c.BirthDate })
             }
         };
+
+        return reply;
+    }
+
+    public override async Task<GetClientReply> GetClient(GetClientRequest request,
+        ServerCallContext context)
+    {
+        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
+
+        var response = await httpClient.GetAsync($"users/client-info?clientId={request.Id}");
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("GetClient FAILED: {Response}", response.ToString());
+        response.EnsureSuccessStatusCode();
+
+        var user = await response.Content.ReadFromJsonAsync<Dto.Client>();
+        if (user == null)
+            throw new Exception("GetClient FAILED: user == null");
+
+        var reply = new GetClientReply
+        {
+            Client = new Client
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                BirthDate = Util.ToMs(user.BirthDate),
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                PassportNumber = user.PassportNumber,
+                Email = user.Email,
+                Sex = user.Sex,
+                Blocked = user.Blocked
+            }
+        };
+        if (user.Patronymic != null)
+            reply.Client.Patronymic = user.Patronymic;
+        if (user.PassportSeries != null)
+            reply.Client.PassportSeries = user.PassportSeries;
+        if (user.WhoBlocked != null)
+            reply.Client.WhoBlocked = user.WhoBlocked.Id;
+        if (user.WhoCreated != null)
+            reply.Client.WhoCreated = user.WhoCreated.Id;
+
+        return reply;
+    }
+
+    public override async Task<GetOfficerReply> GetOfficer(GetOfficerRequest request,
+        ServerCallContext context)
+    {
+        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
+
+        var response = await httpClient.GetAsync($"users/officer-info?officerId={request.Id}");
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("GetOfficer FAILED: {Response}", response.ToString());
+        response.EnsureSuccessStatusCode();
+
+        var user = await response.Content.ReadFromJsonAsync<Dto.Officer>();
+        if (user == null)
+            throw new Exception("GetOfficer FAILED: user == null");
+
+        var reply = new GetOfficerReply
+        {
+            Officer = new Officer
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                BirthDate = Util.ToMs(user.BirthDate),
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                PassportNumber = user.PassportNumber,
+                Email = user.Email,
+                Sex = user.Sex,
+                Blocked = user.Blocked
+            }
+        };
+        if (user.Patronymic != null)
+            reply.Officer.Patronymic = user.Patronymic;
+        if (user.PassportSeries != null)
+            reply.Officer.PassportSeries = user.PassportSeries;
+        if (user.WhoBlocked != null)
+            reply.Officer.WhoBlocked = user.WhoBlocked.Id;
+        if (user.WhoCreated != null)
+            reply.Officer.WhoCreated = user.WhoCreated.Id;
 
         return reply;
     }
@@ -86,18 +169,17 @@ public class UserServiceImpl : UserService.UserServiceBase
             Email: request.Email,
             Password: request.Password,
             Sex: request.Sex);
-        
+
         var response = await httpClient.PostAsJsonAsync("users/create-client", content);
-        _logger.LogInformation("CreateClient FAILED: {Response}", response.ToString());
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("CreateClient FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
+
         var user = await response.Content.ReadFromJsonAsync<Dto.Client>();
-        
         if (user == null)
-            return new CreateClientReply { Error = "Not Created" };
-    
-        var reply = new CreateClientReply { Id = user.Id };
-    
-        return reply;
+            throw new Exception("CreateClient FAILED: user == null");
+
+        return new CreateClientReply { Id = user.Id };
     }
 
     public override async Task<CreateOfficerReply> CreateOfficer(CreateOfficerRequest request,
@@ -117,17 +199,16 @@ public class UserServiceImpl : UserService.UserServiceBase
             Email: request.Email,
             Password: request.Password,
             Sex: request.Sex);
-        
+
         var response = await httpClient.PostAsJsonAsync("users/create-officer", content);
-        _logger.LogInformation("CreateOfficer FAILED: {Response}", response.ToString());
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("CreateOfficer FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
+
         var user = await response.Content.ReadFromJsonAsync<Dto.Officer>();
-        
         if (user == null)
-            return new CreateOfficerReply { Error = "Not Created" };
-    
-        var reply = new CreateOfficerReply { Id = user.Id };
-    
-        return reply;
+            throw new Exception("CreateOfficer FAILED: user == null");
+
+        return new CreateOfficerReply { Id = user.Id };
     }
 }

@@ -41,15 +41,16 @@ message Client{
   string firstName = 2;
   string lastName = 3;
   optional string patronymic = 4;
-  string phoneNumber = 5;
-  string address = 6;
-  string passportNumber = 7;
-  optional string passportSeries = 8;
-  string email = 9;
-  string sex = 10;
-  bool isBlocked = 11;
-  optional string whoBlocked = 12;
-  optional string whoCreated = 13;
+  int64 birthDate = 5;
+  string phoneNumber = 6;
+  string address = 7;
+  string passportNumber = 8;
+  optional string passportSeries = 9;
+  string email = 10;
+  string sex = 11;
+  bool blocked = 12;
+  optional string whoBlocked = 13;
+  optional string whoCreated = 14;
 }
 
 message Officer{
@@ -57,13 +58,14 @@ message Officer{
   string firstName = 2;
   string lastName = 3;
   optional string patronymic = 4;
-  string phoneNumber = 5;
-  string address = 6;
-  string passportNumber = 7;
-  optional string passportSeries = 8;
-  string email = 9;
-  string sex = 10;
-  bool isBlocked = 11;
-  optional string whoBlocked = 12;
-  optional string whoCreated = 13;
+  int64 birthDate = 5;
+  string phoneNumber = 6;
+  string address = 7;
+  string passportNumber = 8;
+  optional string passportSeries = 9;
+  string email = 10;
+  string sex = 11;
+  bool blocked = 12;
+  optional string whoBlocked = 13;
+  optional string whoCreated = 14;
 }
