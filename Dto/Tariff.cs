@@ -2,7 +2,7 @@
 
 public record Tariff(
     string Id,
-    string AdditionDate,
+    long AdditionDate,
     string Name,
     string Description,
     double InterestRate,

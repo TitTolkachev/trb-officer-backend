@@ -8,7 +8,7 @@ package common;
 
 message Tariff{
   string id = 1;
-  string additionDate = 2;
+  int64 additionDate = 2;
   string name = 3;
   string description = 4;
   double interestRate = 5;

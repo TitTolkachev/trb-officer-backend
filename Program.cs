@@ -8,9 +8,9 @@ builder.Services.AddHttpClient(Constants.CoreHttpClient, client =>
 {
     client.BaseAddress = new Uri(Constants.CoreHost);
 });
-builder.Services.AddHttpClient(Constants.TariffHttpClient, client =>
+builder.Services.AddHttpClient(Constants.LoanHttpClient, client =>
 {
-    client.BaseAddress = new Uri(Constants.TariffHost);
+    client.BaseAddress = new Uri(Constants.LoanHost);
 });
 builder.Services.AddHttpClient(Constants.UserHttpClient, client =>
 {
@@ -20,5 +20,6 @@ builder.Services.AddHttpClient(Constants.UserHttpClient, client =>
 var app = builder.Build();
 
 app.MapGrpcService<UserServiceImpl>();
+app.MapGrpcService<TariffServiceImpl>();
 
 app.Run();

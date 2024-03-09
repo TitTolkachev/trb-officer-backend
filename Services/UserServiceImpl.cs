@@ -77,7 +77,7 @@ public class UserServiceImpl : UserService.UserServiceBase
             FirstName: request.FirstName,
             LastName: request.LastName,
             Patronymic: request.Patronymic,
-            BirthDate: FromMs(request.BirthDate).ToString("yyyy-MM-dd"),
+            BirthDate: Util.FromMs(request.BirthDate).ToString("yyyy-MM-dd"),
             PhoneNumber: request.PhoneNumber,
             Address: request.Address,
             PassportNumber: request.PassportNumber,
@@ -108,7 +108,7 @@ public class UserServiceImpl : UserService.UserServiceBase
             FirstName: request.FirstName,
             LastName: request.LastName,
             Patronymic: request.Patronymic,
-            BirthDate: FromMs(request.BirthDate).ToString("yyyy-MM-dd"),
+            BirthDate: Util.FromMs(request.BirthDate).ToString("yyyy-MM-dd"),
             PhoneNumber: request.PhoneNumber,
             Address: request.Address,
             PassportNumber: request.PassportNumber,
@@ -129,12 +129,5 @@ public class UserServiceImpl : UserService.UserServiceBase
         var reply = new CreateOfficerReply { Id = user.Id };
     
         return reply;
-    }
-    
-    private static DateTime FromMs(long milliSec)
-    {
-        var startTime = new DateTime(1970, 1, 1);
-        var time = TimeSpan.FromMilliseconds(milliSec);
-        return startTime.Add(time);
     }
 }

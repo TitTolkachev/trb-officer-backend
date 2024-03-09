@@ -18,7 +18,7 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
     public override async Task<GetTariffListReply> GetTariffList(GetTariffListRequest request,
         ServerCallContext context)
     {
-        var httpClient = _httpClientFactory.CreateClient(Constants.TariffHttpClient);
+        var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
 
         var response = await httpClient.GetAsync("tariff");
         _logger.LogInformation("GetClientList FAILED: {Response}", response.ToString());
@@ -37,7 +37,7 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
                     Id = tariff.Id,
                     AdditionDate = tariff.AdditionDate,
                     Name = tariff.Name,
-                    Description = tariff.AdditionDate,
+                    Description = tariff.Description,
                     InterestRate = tariff.InterestRate,
                     OfficerId = tariff.OfficerId,
                 })
@@ -50,7 +50,7 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
     public override async Task<CreateTariffReply> CreateTariff(CreateTariffRequest request,
         ServerCallContext context)
     {
-        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
+        var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
         var content = new NewTariff(
             Name: request.Name,
             Description: request.Description,
@@ -74,7 +74,7 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
                 Id = tariff.Id,
                 AdditionDate = tariff.AdditionDate,
                 Name = tariff.Name,
-                Description = tariff.AdditionDate,
+                Description = tariff.Description,
                 InterestRate = tariff.InterestRate,
                 OfficerId = tariff.OfficerId,
             }
