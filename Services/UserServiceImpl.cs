@@ -152,6 +152,34 @@ public class UserServiceImpl : UserService.UserServiceBase
         return reply;
     }
 
+    public override async Task<BlockClientReply> BlockClient(BlockClientRequest request,
+        ServerCallContext context)
+    {
+        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
+        var content = new BlockClient(ClientId: request.ClientId, OfficerId: request.OfficerId);
+        
+        var response = await httpClient.PostAsJsonAsync("users/block-client", content);
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("BlockClient FAILED: {Response}", response.ToString());
+        response.EnsureSuccessStatusCode();
+        
+        return new BlockClientReply();
+    }
+
+    public override async Task<BlockOfficerReply> BlockOfficer(BlockOfficerRequest request,
+        ServerCallContext context)
+    {
+        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
+        var content = new BlockOfficer(OfficerId: request.OfficerId, WhoBlocksId: request.WhoBlocksId);
+        
+        var response = await httpClient.PostAsJsonAsync("users/block-officer", content);
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("BlockOfficer FAILED: {Response}", response.ToString());
+        response.EnsureSuccessStatusCode();
+        
+        return new BlockOfficerReply();
+    }
+
     public override async Task<CreateClientReply> CreateClient(CreateClientRequest request,
         ServerCallContext context)
     {

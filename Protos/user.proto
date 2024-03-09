@@ -11,6 +11,8 @@ service UserService {
   rpc GetOfficerList (GetOfficerListRequest) returns (GetOfficerListReply);
   rpc GetClient (GetClientRequest) returns (GetClientReply);
   rpc GetOfficer (GetOfficerRequest) returns (GetOfficerReply);
+  rpc BlockClient (BlockClientRequest) returns (BlockClientReply);
+  rpc BlockOfficer (BlockOfficerRequest) returns (BlockOfficerReply);
   rpc CreateClient (CreateClientRequest) returns (CreateClientReply);
   rpc CreateOfficer (CreateOfficerRequest) returns (CreateOfficerReply);
 }
@@ -42,6 +44,20 @@ message GetOfficerRequest{
 message GetOfficerReply{
   common.Officer officer = 1;
 }
+
+// Block Client
+message BlockClientRequest{
+  string clientId = 1;
+  string officerId = 2;
+}
+message BlockClientReply{}
+
+// Block Officer
+message BlockOfficerRequest{
+  string officerId = 1;
+  string whoBlocksId = 2;
+}
+message BlockOfficerReply{}
 
 // Create Client
 message CreateClientRequest{
