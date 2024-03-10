@@ -7,6 +7,7 @@ option csharp_namespace = "trb_officer_backend";
 package user;
 
 service UserService {
+  rpc SignIn (SignInRequest) returns (SignInReply);
   rpc GetClientList (GetClientListRequest) returns (GetClientListReply);
   rpc GetOfficerList (GetOfficerListRequest) returns (GetOfficerListReply);
   rpc GetClient (GetClientRequest) returns (GetClientReply);
@@ -15,6 +16,15 @@ service UserService {
   rpc BlockOfficer (BlockOfficerRequest) returns (BlockOfficerReply);
   rpc CreateClient (CreateClientRequest) returns (CreateClientReply);
   rpc CreateOfficer (CreateOfficerRequest) returns (CreateOfficerReply);
+}
+
+// Sign In
+message SignInRequest{
+  string email = 1;
+  string password = 2;
+}
+message SignInReply{
+  string id = 1;
 }
 
 // Get Client List

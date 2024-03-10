@@ -16,6 +16,24 @@ public class UserServiceImpl : UserService.UserServiceBase
         _logger = logger;
     }
 
+    public override async Task<SignInReply> SignIn(SignInRequest request,
+        ServerCallContext context)
+    {
+        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
+        var content = new Ident(Email: request.Email, Password: request.Password);
+        
+        var response = await httpClient.PostAsJsonAsync("users/ident-officer", content);
+        if (!response.IsSuccessStatusCode)
+            _logger.LogInformation("SignIn FAILED: {Response}", response.ToString());
+        response.EnsureSuccessStatusCode();
+        
+        var userId = await response.Content.ReadFromJsonAsync<string>();
+        if (userId == null)
+            throw new Exception("SignIn FAILED: page == null");
+        
+        return new SignInReply{Id = userId};
+    }
+
     public override async Task<GetClientListReply> GetClientList(GetClientListRequest request,
         ServerCallContext context)
     {
