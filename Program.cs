@@ -21,5 +21,7 @@ var app = builder.Build();
 
 app.MapGrpcService<UserServiceImpl>();
 app.MapGrpcService<TariffServiceImpl>();
+app.MapGrpcService<ApplicationServiceImpl>();
+app.MapGrpcService<LoanServiceImpl>();
 
 app.Run();

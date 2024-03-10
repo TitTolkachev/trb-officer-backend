@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "Protos/common.proto";
+
 option csharp_namespace = "trb_officer_backend";
 
 package application;
@@ -7,12 +9,38 @@ package application;
 service ApplicationService {
   rpc GetApplicationList (GetApplicationListRequest) returns (GetApplicationListReply);
   rpc GetApplication (GetApplicationRequest) returns (GetApplicationReply);
+  rpc ApproveApplication (ApproveApplicationRequest) returns (ApproveApplicationReply);
+  rpc RejectApplication (RejectApplicationRequest) returns (RejectApplicationReply);
 }
 
 // Get Application List
 message GetApplicationListRequest{}
-message GetApplicationListReply{}
+message GetApplicationListReply{
+  repeated common.ApplicationShort application = 1;
+}
 
 // Get Application Info
-message GetApplicationRequest{}
-message GetApplicationReply{}
+message GetApplicationRequest{
+  string id = 1;
+}
+message GetApplicationReply{
+  common.Application application = 1;
+}
+
+// Approve Application
+message ApproveApplicationRequest{
+  string applicationId = 1;
+  string userId = 2;
+}
+message ApproveApplicationReply{
+  common.Application application = 1;
+}
+
+// Reject Application
+message RejectApplicationRequest{
+  string applicationId = 1;
+  string userId = 2;
+}
+message RejectApplicationReply{
+  common.Application application = 1;
+}

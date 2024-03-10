@@ -1,4 +1,4 @@
-﻿namespace trb_officer_backend.Dto.Request;
+﻿namespace trb_officer_backend.Dto;
 
 public record Page(
     int PageNumber,
