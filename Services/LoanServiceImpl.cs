@@ -52,27 +52,36 @@ public class LoanServiceImpl : LoanService.LoanServiceBase
 
     private static Loan ConvertToProto(Dto.Loan loan)
     {
-        return new Loan
-        {
-            Id = loan.Id,
-            IssuedDate = loan.IssuedDate,
-            RepaymentDate = loan.RepaymentDate,
-            IssuedAmount = loan.IssuedAmount,
-            AmountDebt = loan.AmountDebt,
-            AccruedPenny = loan.AccruedPenny,
-            LoanTermInDays = loan.LoanTermInDays,
-            ClientId = loan.ClientId,
-            AccountId = loan.AccountId,
-            State = loan.State,
-            Tariff = new Tariff
-            {
-                Id = loan.Tariff.Id,
-                AdditionDate = loan.Tariff.AdditionDate,
-                Name = loan.Tariff.Name,
-                Description = loan.Tariff.Description,
-                InterestRate = loan.Tariff.InterestRate,
-                OfficerId = loan.Tariff.OfficerId,
-            }
-        };
+        var res =  new Loan
+                          {
+                              Id = loan.Id,
+                              IssuedDate = loan.IssuedDate,
+                              RepaymentDate = loan.RepaymentDate,
+                              IssuedAmount = loan.IssuedAmount,
+                              AmountDebt = loan.AmountDebt,
+                              AccruedPenny = loan.AccruedPenny,
+                              LoanTermInDays = loan.LoanTermInDays,
+                              ClientId = loan.ClientId,
+                              AccountId = loan.AccountId,
+                              State = loan.State,
+                              Tariff = new Tariff
+                              {
+                                  Id = loan.Tariff.Id,
+                                  AdditionDate = loan.Tariff.AdditionDate,
+                                  Name = loan.Tariff.Name,
+                                  Description = loan.Tariff.Description,
+                                  InterestRate = loan.Tariff.InterestRate,
+                                  OfficerId = loan.Tariff.OfficerId,
+                              }
+                          };
+        
+        loan.Repayments.ForEach(r => res.Repayments.Add(new LoanRepayment
+                {
+                    Id = r.Id,
+                    Date = r.Date,
+                    Amount = r.Amount,
+                    State = r.State,
+                }));
+        return res;
     }
 }
