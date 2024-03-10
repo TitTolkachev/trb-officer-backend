@@ -22,9 +22,37 @@ message UserShort{
   string birthDate = 4;
 }
 
-message AccountShort{
+message Account{
   string id = 1;
-  int64 balance = 2;
+  string type = 2;
+  int64 balance = 3;
+  string clientFullName = 4;
+  string externalClientId = 5;
+  int64 creationDate = 6;
+  optional int64 closingDate = 7;
+  bool isClosed = 8;
+}
+
+message Loan{
+  string id = 1;
+  int64 issuedDate = 2;
+  int64 repaymentDate = 3;
+  int64 issuedAmount = 4;
+  int64 amountDebt = 5;
+  int64 accruedPenny = 6;
+  int64 loanTermInDays = 7;
+  string clientId = 8;
+  string accountId = 9;
+  string state = 10;
+  common.Tariff tariff = 11;
+  repeated LoanRepayment repayments = 12;
+}
+
+message LoanRepayment{
+  string id = 1;
+  int64 date = 2;
+  int64 amount = 3;
+  string state = 4;
 }
 
 message Application{
@@ -60,15 +88,6 @@ message LoanShort{
   int64 issuedAmount = 4;
   int64 amountDept = 5;
   string status = 6;
-}
-
-message Account{
-  string id = 1;
-  google.protobuf.Timestamp creationDate = 2;
-  google.protobuf.Timestamp closingDate = 3;
-  int64 balance = 4;
-  string ownerFullName = 5;
-  Client owner = 6;
 }
 
 message Client{

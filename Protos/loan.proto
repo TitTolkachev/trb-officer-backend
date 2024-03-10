@@ -8,10 +8,19 @@ package loan;
 
 service LoanService {
   rpc GetLoanList (GetLoanListRequest) returns (GetLoanListReply);
+  rpc GetLoan (GetLoanRequest) returns (GetLoanReply);
 }
 
 // Get Loan List
 message GetLoanListRequest{}
 message GetLoanListReply{
   repeated common.LoanShort loan = 1;
+}
+
+// Get Loan
+message GetLoanRequest{
+  string id = 1;
+}
+message GetLoanReply{
+  common.Loan loan = 1;
 }

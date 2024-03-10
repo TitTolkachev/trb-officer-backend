@@ -16,7 +16,7 @@ message GetAccountListRequest{
   string userId = 1;
 }
 message GetAccountListReply{
-  repeated common.AccountShort accounts = 1;
+  repeated common.Account accounts = 1;
 }
 
 // Get Account Info
