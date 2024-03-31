@@ -13,7 +13,8 @@ service AccountService {
 
 // Get Account List
 message GetAccountListRequest{
-  string userId = 1;
+  string token = 1;
+  string userId = 2;
 }
 message GetAccountListReply{
   repeated common.Account accounts = 1;
@@ -21,7 +22,8 @@ message GetAccountListReply{
 
 // Get Account Info
 message GetAccountRequest{
-  string accountId = 1;
+  string token = 1;
+  string accountId = 2;
 }
 message GetAccountReply{
   common.Account account = 1;

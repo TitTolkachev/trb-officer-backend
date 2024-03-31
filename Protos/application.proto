@@ -14,14 +14,17 @@ service ApplicationService {
 }
 
 // Get Application List
-message GetApplicationListRequest{}
+message GetApplicationListRequest{
+  string token = 1;
+}
 message GetApplicationListReply{
   repeated common.ApplicationShort application = 1;
 }
 
 // Get Application Info
 message GetApplicationRequest{
-  string id = 1;
+  string token = 1;
+  string id = 2;
 }
 message GetApplicationReply{
   common.Application application = 1;
@@ -29,8 +32,8 @@ message GetApplicationReply{
 
 // Approve Application
 message ApproveApplicationRequest{
-  string applicationId = 1;
-  string userId = 2;
+  string token = 1;
+  string applicationId = 2;
 }
 message ApproveApplicationReply{
   common.Application application = 1;
@@ -38,8 +41,8 @@ message ApproveApplicationReply{
 
 // Reject Application
 message RejectApplicationRequest{
-  string applicationId = 1;
-  string userId = 2;
+  string token = 1;
+  string applicationId = 2;
 }
 message RejectApplicationReply{
   common.Application application = 1;

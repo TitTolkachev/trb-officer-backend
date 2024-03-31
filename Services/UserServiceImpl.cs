@@ -18,6 +18,8 @@ public class UserServiceImpl : UserService.UserServiceBase
     public override async Task<GetClientListReply> GetClientList(GetClientListRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
         var content = new Page(PageNumber: 0, PageSize: 1000);
 
@@ -43,6 +45,8 @@ public class UserServiceImpl : UserService.UserServiceBase
     public override async Task<GetOfficerListReply> GetOfficerList(GetOfficerListRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
         var content = new Page(PageNumber: 0, PageSize: 1000);
 
@@ -70,9 +74,11 @@ public class UserServiceImpl : UserService.UserServiceBase
     public override async Task<GetClientReply> GetClient(GetClientRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
 
-        var response = await httpClient.GetAsync($"users/client-info?clientId={request.Id}");
+        var response = await httpClient.GetAsync($"users/client-info?clientId={request.ClientId}");
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("GetClient FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
@@ -112,9 +118,11 @@ public class UserServiceImpl : UserService.UserServiceBase
     public override async Task<GetOfficerReply> GetOfficer(GetOfficerRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
 
-        var response = await httpClient.GetAsync($"users/client-info?clientId={request.Id}");
+        var response = await httpClient.GetAsync($"users/client-info?clientId={request.OfficerId}");
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("GetOfficer FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
@@ -151,39 +159,30 @@ public class UserServiceImpl : UserService.UserServiceBase
         return reply;
     }
 
-    public override async Task<BlockClientReply> BlockClient(BlockClientRequest request,
+    public override async Task<BlockUserReply> BlockUser(BlockUserRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+        var userId = await FirebaseUtil.GetUserId(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
-        var content = new BlockUser(UserId: request.ClientId, WhoBlocksId: request.OfficerId);
+        var content = new BlockUser(UserId: request.UserId, WhoBlocksId: userId);
         
         var response = await httpClient.PostAsJsonAsync("users/block-user", content);
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("BlockClient FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
         
-        return new BlockClientReply();
+        return new BlockUserReply();
     }
 
-    public override async Task<BlockOfficerReply> BlockOfficer(BlockOfficerRequest request,
+    public override async Task<CreateUserReply> CreateUser(CreateUserRequest request,
         ServerCallContext context)
     {
-        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
-        var content = new BlockUser(UserId: request.OfficerId, WhoBlocksId: request.WhoBlocksId);
-        
-        var response = await httpClient.PostAsJsonAsync("users/block-user", content);
-        if (!response.IsSuccessStatusCode)
-            _logger.LogInformation("BlockOfficer FAILED: {Response}", response.ToString());
-        response.EnsureSuccessStatusCode();
-        
-        return new BlockOfficerReply();
-    }
+        await FirebaseUtil.ValidateWithId(request.Token, request.WhoCreatedId);
 
-    public override async Task<CreateClientReply> CreateClient(CreateClientRequest request,
-        ServerCallContext context)
-    {
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
-        var content = new CreateClient(
+        var content = new CreateUser(
             FirstName: request.FirstName,
             LastName: request.LastName,
             Patronymic: request.Patronymic,
@@ -195,9 +194,11 @@ public class UserServiceImpl : UserService.UserServiceBase
             WhoCreated: request.WhoCreatedId,
             Email: request.Email,
             Password: request.Password,
-            Sex: request.Sex);
+            Sex: request.Sex,
+            IsClient: request.IsClient,
+            IsOfficer: request.IsOfficer);
 
-        var response = await httpClient.PostAsJsonAsync("users/create-client", content);
+        var response = await httpClient.PostAsJsonAsync("users/create-user", content);
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("CreateClient FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
@@ -206,36 +207,6 @@ public class UserServiceImpl : UserService.UserServiceBase
         if (user == null)
             throw new Exception("CreateClient FAILED: user == null");
 
-        return new CreateClientReply { Id = user.Id };
-    }
-
-    public override async Task<CreateOfficerReply> CreateOfficer(CreateOfficerRequest request,
-        ServerCallContext context)
-    {
-        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
-        var content = new CreateOfficer(
-            FirstName: request.FirstName,
-            LastName: request.LastName,
-            Patronymic: request.Patronymic,
-            BirthDate: Util.FromMs(request.BirthDate).ToString("yyyy-MM-dd"),
-            PhoneNumber: request.PhoneNumber,
-            Address: request.Address,
-            PassportNumber: request.PassportNumber,
-            PassportSeries: request.PassportSeries,
-            WhoCreated: request.WhoCreatedId,
-            Email: request.Email,
-            Password: request.Password,
-            Sex: request.Sex);
-
-        var response = await httpClient.PostAsJsonAsync("users/create-officer", content);
-        if (!response.IsSuccessStatusCode)
-            _logger.LogInformation("CreateOfficer FAILED: {Response}", response.ToString());
-        response.EnsureSuccessStatusCode();
-
-        var user = await response.Content.ReadFromJsonAsync<User>();
-        if (user == null)
-            throw new Exception("CreateOfficer FAILED: user == null");
-
-        return new CreateOfficerReply { Id = user.Id };
+        return new CreateUserReply { Id = user.Id };
     }
 }

@@ -12,17 +12,19 @@ service TariffService {
 }
 
 // Get Tariff List
-message GetTariffListRequest{}
+message GetTariffListRequest{
+  string token = 1;
+}
 message GetTariffListReply{
   repeated common.Tariff tariffs = 1;
 }
 
 // Create Tariff
 message CreateTariffRequest{
-  string name = 1;
-  string description = 2;
-  double interestRate = 3;
-  string officerId = 4;
+  string token = 1;
+  string name = 2;
+  string description = 3;
+  double interestRate = 4;
 }
 message CreateTariffReply{
   common.Tariff tariff = 1;

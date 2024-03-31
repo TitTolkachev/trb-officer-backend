@@ -12,14 +12,17 @@ service LoanService {
 }
 
 // Get Loan List
-message GetLoanListRequest{}
+message GetLoanListRequest{
+  string token = 1;
+}
 message GetLoanListReply{
   repeated common.LoanShort loan = 1;
 }
 
 // Get Loan
 message GetLoanRequest{
-  string id = 1;
+  string token = 1;
+  string loanId = 2;
 }
 message GetLoanReply{
   common.Loan loan = 1;

@@ -17,6 +17,8 @@ public class LoanServiceImpl : LoanService.LoanServiceBase
     public override async Task<GetLoanListReply> GetLoanList(GetLoanListRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         // var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
         // var content = new Page (PageNumber : 0, PageSize : 10000);
         //
@@ -36,9 +38,11 @@ public class LoanServiceImpl : LoanService.LoanServiceBase
     public override async Task<GetLoanReply> GetLoan(GetLoanRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
 
-        var response = await httpClient.GetAsync($"loan/{request.Id}");
+        var response = await httpClient.GetAsync($"loan/{request.LoanId}");
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("GetLoan FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();

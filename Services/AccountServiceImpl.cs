@@ -18,6 +18,8 @@ public class AccountServiceImpl : AccountService.AccountServiceBase
     public override async Task<GetAccountListReply> GetAccountList(GetAccountListRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.CoreHttpClient);
 
         var response = await httpClient.GetAsync($"users/{request.UserId}/accounts");
@@ -41,6 +43,8 @@ public class AccountServiceImpl : AccountService.AccountServiceBase
     public override async Task<GetAccountReply> GetAccount(GetAccountRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.CoreHttpClient);
 
         var response = await httpClient.GetAsync($"accounts/{request.AccountId}");

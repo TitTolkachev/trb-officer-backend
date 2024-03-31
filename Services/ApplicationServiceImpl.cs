@@ -18,6 +18,8 @@ public class ApplicationServiceImpl : ApplicationService.ApplicationServiceBase
     public override async Task<GetApplicationListReply> GetApplicationList(GetApplicationListRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+        
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
 
         var list = await GetApplicationList("loanApplicationState=UNDER_CONSIDERATION", httpClient);
@@ -44,6 +46,8 @@ public class ApplicationServiceImpl : ApplicationService.ApplicationServiceBase
     public override async Task<GetApplicationReply> GetApplication(GetApplicationRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+        
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
 
         var response = await httpClient.GetAsync($"loan-applications/{request.Id}");
@@ -61,8 +65,11 @@ public class ApplicationServiceImpl : ApplicationService.ApplicationServiceBase
     public override async Task<ApproveApplicationReply> ApproveApplication(ApproveApplicationRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+        var userId = await FirebaseUtil.GetUserId(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
-        var content = new ApplicationApprove(OfficerId: request.UserId, LoanApplicationId: request.ApplicationId) ;
+        var content = new ApplicationApprove(OfficerId: userId, LoanApplicationId: request.ApplicationId) ;
 
         var response = await httpClient.PostAsJsonAsync($"loan-applications/approve", content);
         if (!response.IsSuccessStatusCode)
@@ -79,8 +86,11 @@ public class ApplicationServiceImpl : ApplicationService.ApplicationServiceBase
     public override async Task<RejectApplicationReply> RejectApplication(RejectApplicationRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+        var userId = await FirebaseUtil.GetUserId(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
-        var content = new ApplicationReject(OfficerId: request.UserId, LoanApplicationId: request.ApplicationId) ;
+        var content = new ApplicationReject(OfficerId: userId, LoanApplicationId: request.ApplicationId) ;
 
         var response = await httpClient.PostAsJsonAsync($"loan-applications/reject", content);
         if (!response.IsSuccessStatusCode)

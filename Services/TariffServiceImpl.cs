@@ -18,6 +18,8 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
     public override async Task<GetTariffListReply> GetTariffList(GetTariffListRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
 
         var response = await httpClient.GetAsync("tariff");
@@ -49,12 +51,15 @@ public class TariffServiceImpl : TariffService.TariffServiceBase
     public override async Task<CreateTariffReply> CreateTariff(CreateTariffRequest request,
         ServerCallContext context)
     {
+        await FirebaseUtil.Validate(request.Token);
+        var userId = await FirebaseUtil.GetUserId(request.Token);
+
         var httpClient = _httpClientFactory.CreateClient(Constants.LoanHttpClient);
         var content = new NewTariff(
             Name: request.Name,
             Description: request.Description,
             InterestRate: request.InterestRate,
-            OfficerId: request.OfficerId
+            OfficerId: userId
         );
 
         var response = await httpClient.PostAsJsonAsync("tariff", content);

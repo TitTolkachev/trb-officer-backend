@@ -1,6 +1,7 @@
 ﻿namespace trb_officer_backend.Dto;
 
-public record CreateOfficer(
+public record CreateUser
+(
     string FirstName,
     string LastName,
     string? Patronymic,
@@ -12,4 +13,7 @@ public record CreateOfficer(
     string WhoCreated,
     string Email,
     string Password,
-    string Sex);
+    string Sex,
+    bool IsClient,
+    bool IsOfficer
+);

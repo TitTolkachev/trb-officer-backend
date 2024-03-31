@@ -11,27 +11,30 @@ service UserService {
   rpc GetOfficerList (GetOfficerListRequest) returns (GetOfficerListReply);
   rpc GetClient (GetClientRequest) returns (GetClientReply);
   rpc GetOfficer (GetOfficerRequest) returns (GetOfficerReply);
-  rpc BlockClient (BlockClientRequest) returns (BlockClientReply);
-  rpc BlockOfficer (BlockOfficerRequest) returns (BlockOfficerReply);
-  rpc CreateClient (CreateClientRequest) returns (CreateClientReply);
-  rpc CreateOfficer (CreateOfficerRequest) returns (CreateOfficerReply);
+  rpc BlockUser (BlockUserRequest) returns (BlockUserReply);
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply);
 }
 
 // Get Client List
-message GetClientListRequest{}
+message GetClientListRequest{
+  string token = 1;
+}
 message GetClientListReply{
   repeated common.UserShort clients = 1;
 }
 
 // Get Officer List
-message GetOfficerListRequest{}
+message GetOfficerListRequest{
+  string token = 1;
+}
 message GetOfficerListReply{
   repeated common.UserShort officers = 1;
 }
 
 // Get Client
 message GetClientRequest{
-  string id = 1;
+  string token = 1;
+  string clientId = 2;
 }
 message GetClientReply{
   common.Client client = 1;
@@ -39,60 +42,38 @@ message GetClientReply{
 
 // Get Officer
 message GetOfficerRequest{
-  string id = 1;
+  string token = 1;
+  string officerId = 2;
 }
 message GetOfficerReply{
   common.Officer officer = 1;
 }
 
-// Block Client
-message BlockClientRequest{
-  string clientId = 1;
-  string officerId = 2;
+// Block User
+message BlockUserRequest{
+  string token = 1;
+  string userId = 2;
 }
-message BlockClientReply{}
+message BlockUserReply{}
 
-// Block Officer
-message BlockOfficerRequest{
-  string officerId = 1;
-  string whoBlocksId = 2;
+// Create User
+message CreateUserRequest{
+  string token = 1;
+  string firstName = 2;
+  string lastName = 3;
+  optional string patronymic = 4;
+  int64 birthDate = 5;
+  string phoneNumber = 6;
+  string address = 7;
+  string passportNumber = 8;
+  optional string passportSeries = 9;
+  string whoCreatedId = 10;
+  string email = 11;
+  string password = 12;
+  string sex = 13;
+  bool isClient = 14;
+  bool isOfficer = 15;
 }
-message BlockOfficerReply{}
-
-// Create Client
-message CreateClientRequest{
-  string firstName = 1;
-  string lastName = 2;
-  optional string patronymic = 3;
-  int64 birthDate = 4;
-  string phoneNumber = 5;
-  string address = 6;
-  string passportNumber = 7;
-  optional string passportSeries = 8;
-  string whoCreatedId = 9;
-  string email = 10;
-  string password = 11;
-  string sex = 12;
-}
-message CreateClientReply{
-  string id = 1;
-}
-
-// Create Officer
-message CreateOfficerRequest{
-  string firstName = 1;
-  string lastName = 2;
-  optional string patronymic = 3;
-  int64 birthDate = 4;
-  string phoneNumber = 5;
-  string address = 6;
-  string passportNumber = 7;
-  optional string passportSeries = 8;
-  string whoCreatedId = 9;
-  string email = 10;
-  string password = 11;
-  string sex = 12;
-}
-message CreateOfficerReply{
+message CreateUserReply{
   string id = 1;
 }
