@@ -13,35 +13,38 @@ public static class FirebaseUtil
             return (string)userRole == "officer";
         }
 
-        return false;
+        throw new Exception("Unknown");;
     }
 
     public static async Task Validate(string token)
     {
         // Verify the ID token first.
-        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
-        if (decoded.Claims.TryGetValue("role", out var userRole))
+        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token, true);
+        if (decoded.Claims.TryGetValue("officer", out var isOfficer))
         {
-            if ((string)userRole != "officer")
+            if (!(bool)isOfficer)
                 throw new Exception("Forbidden");
         }
+        else throw new Exception("Forbidden");
     }
 
     public static async Task ValidateWithId(string token, string id)
     {
         // Verify the ID token first.
-        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
-        if (decoded.Claims.TryGetValue("role", out var userRole))
+        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token, true);
+        if (decoded.Claims.TryGetValue("officer", out var isOfficer))
         {
-            if ((string)userRole != "officer")
+            if (!(bool)isOfficer)
                 throw new Exception("Forbidden");
         }
+        else throw new Exception("Forbidden");
 
         if (decoded.Claims.TryGetValue("id", out var userId))
         {
             if ((string)userId != id)
                 throw new Exception("Forbidden");
         }
+        else throw new Exception("Forbidden");
     }
 
     public static async Task<string> GetUserId(string token)
