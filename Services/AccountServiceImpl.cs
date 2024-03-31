@@ -76,7 +76,8 @@ public class AccountServiceImpl : AccountService.AccountServiceBase
         var reply = new Account
         {
             Type = account.Type,
-            Balance = account.Balance,
+            Balance = (double) account.Balance,
+            Currency = account.Currency,
             ClientFullName = account.ClientFullName,
             ExternalClientId = account.ExternalClientId,
             CreationDate = account.CreationDate,

@@ -15,24 +15,6 @@ public class UserServiceImpl : UserService.UserServiceBase
         _logger = logger;
     }
 
-    public override async Task<SignInReply> SignIn(SignInRequest request,
-        ServerCallContext context)
-    {
-        var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
-        var content = new Ident(Email: request.Email, Password: request.Password);
-        
-        var response = await httpClient.PostAsJsonAsync("users/ident-officer", content);
-        if (!response.IsSuccessStatusCode)
-            _logger.LogInformation("SignIn FAILED: {Response}", response.ToString());
-        response.EnsureSuccessStatusCode();
-        
-        var userId = await response.Content.ReadFromJsonAsync<string>();
-        if (userId == null)
-            throw new Exception("SignIn FAILED: page == null");
-        
-        return new SignInReply{Id = userId};
-    }
-
     public override async Task<GetClientListReply> GetClientList(GetClientListRequest request,
         ServerCallContext context)
     {
@@ -44,7 +26,7 @@ public class UserServiceImpl : UserService.UserServiceBase
             _logger.LogInformation("GetClientList FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
 
-        var page = await response.Content.ReadFromJsonAsync<PageClient>();
+        var page = await response.Content.ReadFromJsonAsync<PageUser>();
         if (page == null)
             throw new Exception("GetClientList FAILED: page == null");
 
@@ -52,7 +34,7 @@ public class UserServiceImpl : UserService.UserServiceBase
         {
             Clients =
             {
-                page.Content.ConvertAll(c => new UserShort
+                page.Content.FindAll(it=>it.IsClient).ConvertAll(c => new UserShort
                     { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, BirthDate = c.BirthDate })
             }
         };
@@ -64,12 +46,12 @@ public class UserServiceImpl : UserService.UserServiceBase
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
         var content = new Page(PageNumber: 0, PageSize: 1000);
 
-        var response = await httpClient.PostAsJsonAsync("users/officer-page", content);
+        var response = await httpClient.PostAsJsonAsync("users/client-page", content);
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("GetOfficerList FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
 
-        var page = await response.Content.ReadFromJsonAsync<PageOfficer>();
+        var page = await response.Content.ReadFromJsonAsync<PageUser>();
         if (page == null)
             throw new Exception("GetOfficerList FAILED: page == null");
 
@@ -77,7 +59,7 @@ public class UserServiceImpl : UserService.UserServiceBase
         {
             Officers =
             {
-                page.Content.ConvertAll(c => new UserShort
+                page.Content.FindAll(it=>it.IsOfficer).ConvertAll(c => new UserShort
                     { Id = c.Id, FirstName = c.FirstName, LastName = c.LastName, BirthDate = c.BirthDate })
             }
         };
@@ -95,7 +77,7 @@ public class UserServiceImpl : UserService.UserServiceBase
             _logger.LogInformation("GetClient FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
 
-        var user = await response.Content.ReadFromJsonAsync<Dto.Client>();
+        var user = await response.Content.ReadFromJsonAsync<User>();
         if (user == null)
             throw new Exception("GetClient FAILED: user == null");
 
@@ -132,12 +114,12 @@ public class UserServiceImpl : UserService.UserServiceBase
     {
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
 
-        var response = await httpClient.GetAsync($"users/officer-info?officerId={request.Id}");
+        var response = await httpClient.GetAsync($"users/client-info?clientId={request.Id}");
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("GetOfficer FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
 
-        var user = await response.Content.ReadFromJsonAsync<Dto.Officer>();
+        var user = await response.Content.ReadFromJsonAsync<User>();
         if (user == null)
             throw new Exception("GetOfficer FAILED: user == null");
 
@@ -173,9 +155,9 @@ public class UserServiceImpl : UserService.UserServiceBase
         ServerCallContext context)
     {
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
-        var content = new BlockClient(ClientId: request.ClientId, OfficerId: request.OfficerId);
+        var content = new BlockUser(UserId: request.ClientId, WhoBlocksId: request.OfficerId);
         
-        var response = await httpClient.PostAsJsonAsync("users/block-client", content);
+        var response = await httpClient.PostAsJsonAsync("users/block-user", content);
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("BlockClient FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
@@ -187,9 +169,9 @@ public class UserServiceImpl : UserService.UserServiceBase
         ServerCallContext context)
     {
         var httpClient = _httpClientFactory.CreateClient(Constants.UserHttpClient);
-        var content = new BlockOfficer(OfficerId: request.OfficerId, WhoBlocksId: request.WhoBlocksId);
+        var content = new BlockUser(UserId: request.OfficerId, WhoBlocksId: request.WhoBlocksId);
         
-        var response = await httpClient.PostAsJsonAsync("users/block-officer", content);
+        var response = await httpClient.PostAsJsonAsync("users/block-user", content);
         if (!response.IsSuccessStatusCode)
             _logger.LogInformation("BlockOfficer FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
@@ -220,7 +202,7 @@ public class UserServiceImpl : UserService.UserServiceBase
             _logger.LogInformation("CreateClient FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
 
-        var user = await response.Content.ReadFromJsonAsync<Dto.Client>();
+        var user = await response.Content.ReadFromJsonAsync<User>();
         if (user == null)
             throw new Exception("CreateClient FAILED: user == null");
 
@@ -250,7 +232,7 @@ public class UserServiceImpl : UserService.UserServiceBase
             _logger.LogInformation("CreateOfficer FAILED: {Response}", response.ToString());
         response.EnsureSuccessStatusCode();
 
-        var user = await response.Content.ReadFromJsonAsync<Dto.Officer>();
+        var user = await response.Content.ReadFromJsonAsync<User>();
         if (user == null)
             throw new Exception("CreateOfficer FAILED: user == null");
 

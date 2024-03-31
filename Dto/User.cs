@@ -1,6 +1,6 @@
 ﻿namespace trb_officer_backend.Dto;
 
-public record Officer(
+public record User(
     string Id,
     string FirstName,
     string LastName,
@@ -8,11 +8,13 @@ public record Officer(
     string BirthDate,
     string Email,
     string PhoneNumber,
+    bool IsClient,
+    bool IsOfficer,
     string Address,
     string PassportNumber,
     string? PassportSeries,
-    Officer? WhoBlocked,
-    Officer? WhoCreated,
+    User? WhoBlocked,
+    User? WhoCreated,
     string Sex,
     bool Blocked
 );

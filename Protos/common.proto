@@ -29,12 +29,13 @@ message UserShort{
 message Account{
   string id = 1;
   string type = 2;
-  int64 balance = 3;
-  string clientFullName = 4;
-  string externalClientId = 5;
-  int64 creationDate = 6;
-  optional int64 closingDate = 7;
-  bool isClosed = 8;
+  double balance = 3;
+  string currency = 4;
+  string clientFullName = 5;
+  string externalClientId = 6;
+  int64 creationDate = 7;
+  optional int64 closingDate = 8;
+  bool isClosed = 9;
 }
 
 message Loan{

@@ -1,11 +1,11 @@
 ﻿namespace trb_officer_backend.Dto;
 
-public record PageOfficer(
+public record PageUser(
     int TotalPages,
     int TotalElements,
     PageableObject Pageable,
     int Size,
-    List<Officer> Content,
+    List<User> Content,
     int Number,
     SortObject Sort,
     int NumberOfElements,

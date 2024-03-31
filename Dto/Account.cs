@@ -3,7 +3,8 @@
 public record Account(
     string Id,
     string Type,
-    long Balance,
+    decimal Balance,
+    string Currency,
     string ClientFullName,
     string ExternalClientId,
     long CreationDate,

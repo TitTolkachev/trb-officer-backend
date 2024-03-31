@@ -12,31 +12,14 @@ FirebaseApp.Create(new AppOptions
     ProjectId = "trb-officer-android",
 });
 
-// Kafka
-// builder.Services.AddKafka(kafka => kafka
-//     .AddCluster(cluster =>
-//     {
-//         const string hostName = Constants.KafkaHostName;
-//         const string topicName = "transaction.callback";
-//         cluster
-//             .WithBrokers(new[] { hostName })
-//             .CreateTopicIfNotExists(topicName, 1, 1)
-//             .AddConsumer(consumer =>
-//                 consumer
-//                     .Topic(topicName)
-//                     .WithGroupId("notifications")
-//                     .AddMiddlewares(middlewares => middlewares
-//                         .AddDeserializer<JsonCoreDeserializer>()
-//                         .AddTypedHandlers(handlers =>
-//                             handlers.AddHandler<AddTaskHandler>()
-//                         )
-//                     )
-//             );
-//     })
-// );
+// Transaction/Kafka Helper
+builder.Services.AddSingleton<Helper>();
 
 // Grpc
 builder.Services.AddGrpc();
+
+// Logger
+builder.Services.AddSingleton(sp => sp.GetRequiredService<ILoggerFactory>().CreateLogger("DefaultLogger"));
 
 // Http Clients
 builder.Services.AddHttpClient(Constants.CoreHttpClient,
@@ -46,11 +29,24 @@ builder.Services.AddHttpClient(Constants.LoanHttpClient,
 builder.Services.AddHttpClient(Constants.UserHttpClient,
     client => { client.BaseAddress = new Uri(Constants.UserHost); });
 
+builder.Services.AddHostedService<TransactionHandler>();
+
 var app = builder.Build();
 
-// Kafka Bus
-// var kafkaBus = app.Services.CreateKafkaBus();
-// await kafkaBus.StartAsync();
+
+// var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+// lifetime.ApplicationStarted.Register(async () =>
+// {
+//     // invoke the message bus after the host is running
+//     var bus = app.Services.GetRequiredService<TransactionHandler>();
+//     await bus.StartAsync(new GreetingCommand("Khalid"));
+// });
+
+
+// var host = Host.CreateDefaultBuilder(args)
+//     .ConfigureServices(services => { services.AddHostedService<TransactionHandler>(); })
+//     .Build();
+// await host.RunAsync();
 
 // Grpc Services
 app.MapGrpcService<UserServiceImpl>();

@@ -1,6 +1,6 @@
 ﻿namespace trb_officer_backend.Dto;
 
-public record BlockOfficer(
-    string OfficerId,
+public record BlockUser(
+    string UserId,
     string WhoBlocksId
 );
