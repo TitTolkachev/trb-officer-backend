@@ -32,7 +32,15 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="Protos\transaction.proto" GrpcServices="Server" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+        <PackageReference Include="KafkaFlow" Version="3.0.5" />
+        <PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="3.0.5" />
+        <PackageReference Include="KafkaFlow.Serializer.JsonCore" Version="3.0.5" />
     </ItemGroup>
 
 </Project>
