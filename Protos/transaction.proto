@@ -8,9 +8,19 @@ package transaction;
 
 service TransactionService {
   rpc GetTransactionList (GetTransactionListRequest) returns (stream common.Transaction);
+  rpc GetTransactionsHistory (GetTransactionsHistoryRequest) returns (GetTransactionsHistoryResponse);
+}
+
+// Get Transactions List
+message GetTransactionListRequest{
+  
 }
 
 // Get Account List
-message GetTransactionListRequest{
-  
+message GetTransactionsHistoryRequest{
+  string token = 1;
+  string accountId = 2;
+}
+message GetTransactionsHistoryResponse{
+  repeated common.TransactionParsed transactions = 1;
 }

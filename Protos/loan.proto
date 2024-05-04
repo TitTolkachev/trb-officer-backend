@@ -16,7 +16,7 @@ message GetLoanListRequest{
   string token = 1;
 }
 message GetLoanListReply{
-  repeated common.LoanShort loan = 1;
+  repeated common.LoanShort loans = 1;
 }
 
 // Get Loan

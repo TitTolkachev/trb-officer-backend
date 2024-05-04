@@ -17,6 +17,17 @@ message Transaction{
   string result = 1;
 }
 
+message TransactionParsed{
+  string id = 1;
+  string externalId = 2;
+  int64 date = 3;
+  optional string payerAccountId = 4;
+  optional string payeeAccountId = 5;
+  double amount = 6;
+  string currency = 7;
+  string type = 8;
+}
+
 message UserShort{
   string id = 1;
   string firstName = 2;
@@ -86,11 +97,10 @@ message ApplicationShort{
 
 message LoanShort{
   string id = 1;
-  string clientFirstName = 2;
-  string clientLastName = 3;
-  int64 issuedAmount = 4;
-  int64 amountDept = 5;
-  string status = 6;
+  int64 issuedDate = 2;
+  int64 repaymentDate = 3;
+  int64 amountDebt = 4;
+  double interestRate = 5;
 }
 
 message Client{

@@ -4,22 +4,16 @@ namespace trb_officer_backend.Common;
 
 public static class FirebaseUtil
 {
-    public static async Task<bool> IsOfficer(string token)
-    {
-        // Verify the ID token first.
-        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
-        if (decoded.Claims.TryGetValue("role", out var userRole))
-        {
-            return (string)userRole == "officer";
-        }
-
-        throw new Exception("Unknown");;
-    }
-
     public static async Task Validate(string token)
     {
-        // Verify the ID token first.
-        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token, true);
+        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+        var disabled = FirebaseAuth.DefaultInstance.GetUserAsync(decoded.Uid).Result.Disabled;
+
+        if (disabled)
+        {
+            throw new Exception($"User {decoded.Uid} is disabled");
+        }
+
         if (decoded.Claims.TryGetValue("officer", out var isOfficer))
         {
             if (!(bool)isOfficer)
@@ -30,8 +24,14 @@ public static class FirebaseUtil
 
     public static async Task ValidateWithId(string token, string id)
     {
-        // Verify the ID token first.
-        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token, true);
+        var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+        var disabled = FirebaseAuth.DefaultInstance.GetUserAsync(decoded.Uid).Result.Disabled;
+
+        if (disabled)
+        {
+            throw new Exception($"User {decoded.Uid} is disabled");
+        }
+
         if (decoded.Claims.TryGetValue("officer", out var isOfficer))
         {
             if (!(bool)isOfficer)
@@ -49,7 +49,6 @@ public static class FirebaseUtil
 
     public static async Task<string> GetUserId(string token)
     {
-        // Verify the ID token first.
         var decoded = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
         if (decoded.Claims.TryGetValue("id", out var userId))
         {

@@ -1,5 +1,8 @@
+using System.Net;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 using trb_officer_backend.Common;
 using trb_officer_backend.Services;
 
@@ -23,30 +26,113 @@ builder.Services.AddSingleton(sp => sp.GetRequiredService<ILoggerFactory>().Crea
 
 // Http Clients
 builder.Services.AddHttpClient(Constants.CoreHttpClient,
-    client => { client.BaseAddress = new Uri(Constants.CoreHost); });
+    client => { client.BaseAddress = new Uri(Constants.CoreHost); })
+    .AddResilienceHandler(
+        "CustomPipeline",
+        static builder =>
+        {
+            // See: https://www.pollydocs.org/strategies/retry.html
+            builder.AddRetry(new HttpRetryStrategyOptions
+            {
+                // Customize and configure the retry logic.
+                BackoffType = DelayBackoffType.Exponential,
+                MaxRetryAttempts = 5,
+                UseJitter = true
+            });
+
+            // See: https://www.pollydocs.org/strategies/circuit-breaker.html
+            builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+            {
+                // Customize and configure the circuit breaker logic.
+                SamplingDuration = TimeSpan.FromSeconds(30),
+                FailureRatio = 0.7,
+                MinimumThroughput = 10,
+                ShouldHandle = static args => ValueTask.FromResult(args is
+                {
+                    Outcome.Result.StatusCode:
+                    HttpStatusCode.RequestTimeout or
+                    HttpStatusCode.TooManyRequests or
+                    HttpStatusCode.InternalServerError
+                })
+            });
+
+            // See: https://www.pollydocs.org/strategies/timeout.html
+            builder.AddTimeout(TimeSpan.FromSeconds(10));
+        });
+
 builder.Services.AddHttpClient(Constants.LoanHttpClient,
-    client => { client.BaseAddress = new Uri(Constants.LoanHost); });
+    client => { client.BaseAddress = new Uri(Constants.LoanHost); })
+    .AddResilienceHandler(
+        "CustomPipeline",
+        static builder =>
+        {
+            // See: https://www.pollydocs.org/strategies/retry.html
+            builder.AddRetry(new HttpRetryStrategyOptions
+            {
+                // Customize and configure the retry logic.
+                BackoffType = DelayBackoffType.Exponential,
+                MaxRetryAttempts = 5,
+                UseJitter = true
+            });
+
+            // See: https://www.pollydocs.org/strategies/circuit-breaker.html
+            builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+            {
+                // Customize and configure the circuit breaker logic.
+                SamplingDuration = TimeSpan.FromSeconds(30),
+                FailureRatio = 0.7,
+                MinimumThroughput = 10,
+                ShouldHandle = static args => ValueTask.FromResult(args is
+                {
+                    Outcome.Result.StatusCode:
+                    HttpStatusCode.RequestTimeout or
+                    HttpStatusCode.TooManyRequests or
+                    HttpStatusCode.InternalServerError
+                })
+            });
+
+            // See: https://www.pollydocs.org/strategies/timeout.html
+            builder.AddTimeout(TimeSpan.FromSeconds(10));
+        });
+
 builder.Services.AddHttpClient(Constants.UserHttpClient,
-    client => { client.BaseAddress = new Uri(Constants.UserHost); });
+    client => { client.BaseAddress = new Uri(Constants.UserHost); })
+    .AddResilienceHandler(
+        "CustomPipeline",
+        static builder =>
+        {
+            // See: https://www.pollydocs.org/strategies/retry.html
+            builder.AddRetry(new HttpRetryStrategyOptions
+            {
+                // Customize and configure the retry logic.
+                BackoffType = DelayBackoffType.Exponential,
+                MaxRetryAttempts = 5,
+                UseJitter = true
+            });
+
+            // See: https://www.pollydocs.org/strategies/circuit-breaker.html
+            builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+            {
+                // Customize and configure the circuit breaker logic.
+                SamplingDuration = TimeSpan.FromSeconds(30),
+                FailureRatio = 0.7,
+                MinimumThroughput = 10,
+                ShouldHandle = static args => ValueTask.FromResult(args is
+                {
+                    Outcome.Result.StatusCode:
+                    HttpStatusCode.RequestTimeout or
+                    HttpStatusCode.TooManyRequests or
+                    HttpStatusCode.InternalServerError
+                })
+            });
+
+            // See: https://www.pollydocs.org/strategies/timeout.html
+            builder.AddTimeout(TimeSpan.FromSeconds(10));
+        });
 
 builder.Services.AddHostedService<TransactionHandler>();
 
 var app = builder.Build();
-
-
-// var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-// lifetime.ApplicationStarted.Register(async () =>
-// {
-//     // invoke the message bus after the host is running
-//     var bus = app.Services.GetRequiredService<TransactionHandler>();
-//     await bus.StartAsync(new GreetingCommand("Khalid"));
-// });
-
-
-// var host = Host.CreateDefaultBuilder(args)
-//     .ConfigureServices(services => { services.AddHostedService<TransactionHandler>(); })
-//     .Build();
-// await host.RunAsync();
 
 // Grpc Services
 app.MapGrpcService<UserServiceImpl>();

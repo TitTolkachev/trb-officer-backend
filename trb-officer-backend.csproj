@@ -41,6 +41,7 @@
         <PackageReference Include="KafkaFlow" Version="3.0.5" />
         <PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="3.0.5" />
         <PackageReference Include="KafkaFlow.Serializer.JsonCore" Version="3.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.4.0" />
     </ItemGroup>
 
 </Project>
