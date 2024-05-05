@@ -141,5 +141,6 @@ app.MapGrpcService<ApplicationServiceImpl>();
 app.MapGrpcService<LoanServiceImpl>();
 app.MapGrpcService<AccountServiceImpl>();
 app.MapGrpcService<TransactionServiceImpl>();
+app.MapGrpcService<RatingServiceImpl>();
 
 app.Run();

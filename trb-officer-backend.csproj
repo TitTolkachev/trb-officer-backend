@@ -36,6 +36,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="Protos\rating.proto" GrpcServices="Server" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
         <PackageReference Include="KafkaFlow" Version="3.0.5" />
