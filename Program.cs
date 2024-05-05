@@ -35,8 +35,8 @@ builder.Services.AddHttpClient(Constants.CoreHttpClient,
             builder.AddRetry(new HttpRetryStrategyOptions
             {
                 // Customize and configure the retry logic.
-                BackoffType = DelayBackoffType.Exponential,
-                MaxRetryAttempts = 5,
+                BackoffType = DelayBackoffType.Constant,
+                MaxRetryAttempts = 10,
                 UseJitter = true
             });
 
@@ -70,8 +70,8 @@ builder.Services.AddHttpClient(Constants.LoanHttpClient,
             builder.AddRetry(new HttpRetryStrategyOptions
             {
                 // Customize and configure the retry logic.
-                BackoffType = DelayBackoffType.Exponential,
-                MaxRetryAttempts = 5,
+                BackoffType = DelayBackoffType.Constant,
+                MaxRetryAttempts = 10,
                 UseJitter = true
             });
 
@@ -105,8 +105,8 @@ builder.Services.AddHttpClient(Constants.UserHttpClient,
             builder.AddRetry(new HttpRetryStrategyOptions
             {
                 // Customize and configure the retry logic.
-                BackoffType = DelayBackoffType.Exponential,
-                MaxRetryAttempts = 5,
+                BackoffType = DelayBackoffType.Constant,
+                MaxRetryAttempts = 10,
                 UseJitter = true
             });
 
